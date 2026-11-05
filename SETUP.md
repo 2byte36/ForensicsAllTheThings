@@ -62,6 +62,7 @@ The sources below are project-maintained installation/download pages or reposito
 | GDB / objdump | `sudo apt install gdb binutils` | [Installation/source](https://www.sourceware.org/gdb/download/) | `gdb --version`; `objdump --version` |
 | WinDbg | Install on Windows using Microsoft’s setup instructions | [Installation/source](https://learn.microsoft.com/en-us/windows-hardware/drivers/debugger/) | Open debugger Help/About |
 | Wireshark / TShark | `sudo apt install tshark`; desktop installer available upstream | [Installation/source](https://www.wireshark.org/download.html) | `tshark --version` |
+| Mandiant macos-UnifiedLogs | Download a compatible release or build the `examples` workspace with Rust/Cargo; see [the macOS recipe](macOS-Forensics/README.md#unified-logs-with-mandiant) | [Build instructions](https://github.com/mandiant/macos-UnifiedLogs/blob/main/BUILDING.md), [releases](https://github.com/mandiant/macos-UnifiedLogs/releases) | `unifiedlog_iterator --help`; `unifiedlog_iterator --version` |
 | Zeek | Use official packages for your distribution or the documented build | [Installation/source](https://docs.zeek.org/en/current/install.html) | `zeek --version` |
 | jq | `sudo apt install jq` | [Installation/source](https://jqlang.org/download/) | `jq --version` |
 | Zimmerman tools | Windows: download Get-ZimmermanTools, inspect it, then run with `-Dest` as documented; install the matching .NET runtime | [Installation/source](https://ericzimmerman.github.io/) | Run the selected executable with `-h` |

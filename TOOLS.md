@@ -24,6 +24,7 @@ Install only the tools needed for the artifact. Follow upstream instructions and
 | Disk | [Sleuth Kit](https://www.sleuthkit.org/sleuthkit/), [Autopsy](https://www.autopsy.com/), [libewf](https://github.com/libyal/libewf), [cryptsetup](https://gitlab.com/cryptsetup/cryptsetup) |
 | Memory | [Volatility 3](https://github.com/volatilityfoundation/volatility3), [MemProcFS](https://github.com/ufrisk/MemProcFS), [bulk_extractor](https://github.com/simsong/bulk_extractor) |
 | Windows artifacts | [Eric Zimmerman tools](https://ericzimmerman.github.io/), [pypykatz](https://github.com/skelsec/pypykatz), [bmc-tools](https://github.com/ANSSI-FR/bmc-tools) |
+| macOS Unified Logs | [Mandiant macos-UnifiedLogs](https://github.com/mandiant/macos-UnifiedLogs) — `unifiedlog_iterator`; [build and usage recipe](macOS-Forensics/README.md#unified-logs-with-mandiant) |
 | Network | [Wireshark/TShark](https://www.wireshark.org/docs/), [Zeek](https://docs.zeek.org/) |
 | Browser stores | [dfindexeddb](https://github.com/google/dfindexeddb), SQLite, a version-compatible DPAPI/application parser |
 | Documents | [qpdf](https://qpdf.readthedocs.io/), [Poppler](https://poppler.freedesktop.org/), [oletools](https://github.com/decalage2/oletools) |

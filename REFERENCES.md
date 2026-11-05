@@ -21,6 +21,7 @@ The cheatsheet draws on primary documentation and general forensic workflows. Us
 - [systemd units](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html) — unit paths, precedence, and drop-ins.
 
 - [Apple launch daemons and agents](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html) — launchd configuration and scope; see the [macOS guide](macOS-Forensics/README.md).
+- [Mandiant macos-UnifiedLogs](https://github.com/mandiant/macos-UnifiedLogs) — cross-platform Unified Log parser; [current CLI source](https://github.com/mandiant/macos-UnifiedLogs/blob/main/examples/unifiedlog_iterator/src/main.rs).
 - [Python plistlib](https://docs.python.org/3/library/plistlib.html) — XML/binary property-list parsing.
 
 ## Network and peripherals
