@@ -1,0 +1,10 @@
+# Keep evidence and generated case output out of this reference repository.
+/work/
+/extracts/
+/carved/
+/evidence/
+__pycache__/
+*.py[cod]
+.venv/
+.DS_Store
+Thumbs.db
