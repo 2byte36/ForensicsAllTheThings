@@ -25,7 +25,8 @@ Inspired by the topic-per-directory structure of [PayloadsAllTheThings](https://
 | [Memory forensics](Memory-Forensics/README.md) | Windows/Linux RAM, process dumps, injected code, runtime keys |
 | [Network forensics](Network-Forensics/README.md) | PCAP/PCAPNG, HTTP, DNS, ICMP, TLS, MQTT, exfiltration |
 | [Windows artifacts](Windows-Artifacts/README.md) | EVTX, registry, Prefetch, MFT/USN, DPAPI, RDP caches |
-| [Linux and macOS](Linux-and-macOS/README.md) | Auth logs, persistence, shell history, containers, plist files |
+| [Linux forensics](Linux-Forensics/README.md) | Auth logs, systemd/cron persistence, shell history, container layers |
+| [macOS forensics](macOS-Forensics/README.md) | Property lists, launch agents/daemons, keychains, unified logs |
 | [Browser and messaging](Browser-and-Messaging/README.md) | Chromium profiles, downloads, Signal, Outlook, encrypted stores |
 | [SQLite and WAL](SQLite-and-WAL/README.md) | Deleted rows, old database states, uncommitted transactions |
 | [Documents and email](Documents-and-Email/README.md) | PDF, DOCX/DOCM, EML, macros, misleading redaction |

@@ -1,8 +1,8 @@
-# Linux and macOS artifacts
+# Linux artifacts
 
 [Home](../README.md) · [Quick reference](../QUICKSTART.md) · [Reference library](../REFERENCES.md)
 
-Follow account activity, persistence, application data, and filesystem history from an offline acquisition.
+Follow Linux account activity, persistence, application data, and filesystem history from an offline acquisition. For Apple host artifacts, use the separate [macOS guide](../macOS-Forensics/README.md).
 
 ## Summary
 
@@ -11,7 +11,6 @@ Follow account activity, persistence, application data, and filesystem history f
 - [Linux artifact map](#linux-artifact-map)
 - [Persistence and hidden files](#persistence-and-hidden-files)
 - [Container layer recovery](#container-layer-recovery)
-- [macOS pivots](#macos-pivots)
 - [General host investigation checklist](#general-host-investigation-checklist)
 - [References](#references)
 
@@ -83,30 +82,6 @@ Read manifest/config data to identify layer order and build history. A deletion 
 
 **Layers** recovered a file from a historical COPY layer. **Breached** required searching container snapshots for web logs and distinguishing host paths from paths inside the container.
 
-## macOS pivots
-
-| Location | Use |
-| --- | --- |
-| `/System/Library/CoreServices/SystemVersion.plist` | OS version/build |
-| User `.zsh_history` | Commands and possible extended timestamps |
-| `/Library/LaunchDaemons`, `/Library/LaunchAgents`, user `Library/LaunchAgents` | Persistence definitions |
-| `/private/tmp` | Temporary payloads; `/tmp` commonly resolves here |
-| User `Library/Keychains` | Protected secrets; choose a format-compatible parser |
-| Unified logs | Process, service, and account activity |
-
-Read a plist portably:
-
-```bash
-python3 - <<'PYCODE'
-import plistlib
-from pathlib import Path
-p = Path('extracts/System/Library/CoreServices/SystemVersion.plist')
-print(plistlib.loads(p.read_bytes()))
-PYCODE
-```
-
-Use a unified-log parser appropriate to the acquisition. In **wilson disaster**, email, shell history, a helper binary, unified logs, and a file-timestamp-derived key connected the stages. Preserve the distinction between the observed timestamp and the answer accepted by the challenge service.
-
 ## General host investigation checklist
 
 - Resolve the installed OS and users from system files before interpreting paths or IDs.
@@ -114,7 +89,6 @@ Use a unified-log parser appropriate to the acquisition. In **wilson disaster**,
 - Review systemd unit drop-ins and referenced environment files, not only the main unit.
 - Correlate package-manager history with binaries and service installation times.
 - Keep user-level persistence separate from system-level persistence.
-- For macOS, preserve plist files, quarantine/provenance artifacts, application databases, and unified-log archives when included in the collection.
 
 A command in a service definition proves configuration, not that the service ran. A library listed in `ld.so.preload` may have been removed or replaced by acquisition time. Use logs, hashes, and file metadata to establish the observed state.
 
@@ -123,9 +97,7 @@ For image layers and repository history, continue with [cloud and containers](..
 ## References
 
 - [systemd unit documentation](https://www.freedesktop.org/software/systemd/man/latest/systemd.unit.html)
-- [Python plist reader](https://docs.python.org/3/library/plistlib.html)
 - [NCLP — Layers and Whisper From The Basement](https://2byte36.github.io/blog/nclp-ctf-s1)
 - [Wreck-IT — Wulung-2604](https://2byte36.github.io/blog/wreck-it-7-quals)
 - [GEMASTIK — Tombstone](https://2byte36.github.io/blog/gemastik-19-quals)
 - [C2C — Breached](https://2byte36.github.io/blog/c2c26-quals)
-- [ARA final — wilson disaster](https://2byte36.github.io/blog/ara-7-final)

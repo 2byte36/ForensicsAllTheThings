@@ -77,7 +77,7 @@ Keep immutable image layers separate from runtime writes and externally mounted 
 
 Follow the manifest's layer order. Inspect candidate layer members before selectively extracting them. OCI whiteouts such as `.wh.filename` remove a lower-layer path from the merged view; they do not erase its historical bytes. An opaque-directory marker hides lower entries in that directory.
 
-Do not simply overlay all tar files and expect a correct reconstructed root filesystem. Preserve duplicate paths by layer, apply whiteout semantics when building a view, and check each blob's declared compression/media type. See [Linux container workflow](../Linux-and-macOS/README.md#container-layer-recovery) for Skopeo and dive.
+Do not simply overlay all tar files and expect a correct reconstructed root filesystem. Preserve duplicate paths by layer, apply whiteout semantics when building a view, and check each blob's declared compression/media type. See [Linux container workflow](../Linux-Forensics/README.md#container-layer-recovery) for Skopeo and dive.
 
 ## Git and build history
 

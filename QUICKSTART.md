@@ -30,6 +30,8 @@ An archive-listing error may simply mean this is not an archive. File extensions
 | ELF / process core | `readelf -h -l core.dump` | [Memory](Memory-Forensics/README.md#process-core-dumps) |
 | PCAP / PCAPNG | `tshark -r capture.pcapng -q -z io,phs` | [Network](Network-Forensics/README.md) |
 | EVTX / registry / Prefetch | Parse the relevant artifact and correlate time | [Windows](Windows-Artifacts/README.md) |
+| Linux host files / journals | Inspect auth logs, systemd units, and shell history | [Linux](Linux-Forensics/README.md) |
+| macOS host files / plists | Identify OS/user context and parse launch definitions | [macOS](macOS-Forensics/README.md) |
 | Database + WAL | Preserve the database and sidecars before opening | [SQLite](SQLite-and-WAL/README.md) |
 | Browser / chat profile | Identify the user and actual profile directory | [Browser](Browser-and-Messaging/README.md) |
 | PDF / Office / email | `exiftool`, `pdftotext`, `7z l`, `olevba` | [Documents](Documents-and-Email/README.md) |
