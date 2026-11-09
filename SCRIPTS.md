@@ -14,7 +14,7 @@ Prefer [direct commands from the local toolbox](LOCAL-TOOLBOX.md) when available
 | [carve.py](scripts/helpers/carve.py) | File + byte range → carved file and hash | Standard library; range bounds checked; streams large inputs |
 | [scan_bytes.py](scripts/helpers/scan_bytes.py) | File + literal/hex marker → decimal/hex offsets | Standard library; overlapping and chunk-boundary matches |
 | [decode_bytes.py](scripts/helpers/decode_bytes.py) | Base64/URL-safe Base64/hex/XOR → bytes | Standard library; one layer, 64 MiB input cap, strict Base64 |
-| [timestamps.py](scripts/helpers/timestamps.py) | Known epoch + integer → UTC JSON | Standard library; retains FILETIME residual ticks, no guessing |
+| [timestamps.py](scripts/helpers/timestamps.py) | Known epoch + integer, or FILETIME `--hex-le` bytes → UTC JSON | Standard library; FILETIME includes exact `utc_100ns`, residual ticks, and raw hex when supplied |
 | [zip_inventory.py](scripts/helpers/zip_inventory.py) | ZIP/APK/OOXML → member metadata JSONL | Standard library; no extraction, decompression, or password recovery |
 | [browser_history.py](scripts/helpers/browser_history.py) | Copied Chromium/Firefox DB → visit JSONL | Standard library SQLite; fixed documented schemas, raw time retained |
 | [wal_frames.py](scripts/helpers/wal_frames.py) | SQLite WAL → checksum-validated frame JSONL | Standard library; no snapshot replay or encrypted-WAL support |

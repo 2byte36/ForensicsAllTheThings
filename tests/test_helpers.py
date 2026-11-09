@@ -98,6 +98,20 @@ class Helpers(unittest.TestCase):
         row=self.rows(self.run_helper('timestamps.py','unix',-1))[0]
         self.assertEqual(row['utc'],'1969-12-31T23:59:59+00:00')
 
+    def test_filetime_little_endian_hex_and_precision(self):
+        for value in ('0C 66 1E 5A D1 4D DD 01', '0c661e5ad14ddd01'):
+            row = self.rows(self.run_helper('timestamps.py', 'filetime', value, '--hex-le'))[0]
+            self.assertEqual(row['raw'], 134349125446428172)
+            self.assertEqual(row['utc'], '2026-09-26T16:09:04.642817+00:00')
+            self.assertEqual(row['remaining_100ns_ticks'], 2)
+            self.assertEqual(row['utc_100ns'], '2026-09-26T16:09:04.6428172Z')
+            self.assertEqual(row['raw_hex_le'], '0c 66 1e 5a d1 4d dd 01')
+        decimal = self.rows(self.run_helper('timestamps.py', 'filetime', 134349125446428172))[0]
+        self.assertEqual(decimal['utc_100ns'], row['utc_100ns'])
+        for bad in ('', '0C 66', '00 '*9, 'GG '*8, '0x0C661E5AD14DDD01'):
+            self.run_helper('timestamps.py', 'filetime', bad, '--hex-le', ok=False)
+        self.run_helper('timestamps.py', 'unix', '00 '*8, '--hex-le', ok=False)
+
     def test_zip_metadata_not_extraction(self):
         src=self.root/'test.zip'
         with zipfile.ZipFile(src,'w') as z:

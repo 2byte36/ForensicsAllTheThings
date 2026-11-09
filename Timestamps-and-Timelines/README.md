@@ -35,10 +35,13 @@ Run from the repository root. Set `CASE` to an existing case directory outside t
 CASE=/absolute/path/to/case
 mkdir -p "$CASE/work" "$CASE/carved" "$CASE/extracts"
 python3 scripts/helpers/timestamps.py filetime 133444736000000001
+python3 scripts/helpers/timestamps.py filetime --hex-le "0C 66 1E 5A D1 4D DD 01"
 python3 scripts/helpers/timestamps.py chromium 13344473600000000
 ```
 
-Prints JSON containing raw value, format, UTC, and leftover FILETIME 100 ns ticks. Accepts signed decimal integers; caller must identify the epoch and distinguish sentinel values. It does not guess timezone or unit.
+Prints JSON containing raw value, format, UTC, and leftover FILETIME 100 ns ticks. Accepts signed decimal integers; `filetime --hex-le` also accepts exactly eight hex bytes in little-endian order, quoted when separated by spaces. Compact hex works too. Caller must identify the epoch and distinguish sentinel values; the script does not guess timezone or unit.
+
+For a `LastRtpTurnedOffTime` value displayed as `0C 66 1E 5A D1 4D DD 01`, the integer is `134349125446428172` and `utc_100ns` is **`2026-09-26T16:09:04.6428172Z`**. This field preserves all seven fractional digits; `utc` has Python datetime's six-digit microsecond precision, with the remaining two 100 ns ticks reported separately. Do not reverse the bytes manually when using `--hex-le`. This converts the stored value, not the registry key's last-write timestamp.
 
 ## Recognize the timestamp format
 
