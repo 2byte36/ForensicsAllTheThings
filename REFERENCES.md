@@ -58,6 +58,25 @@ The cheatsheet draws on primary documentation and general forensic workflows. Us
 - [OCI image layout](https://github.com/opencontainers/image-spec/blob/main/image-layout.md) and [layer specification](https://github.com/opencontainers/image-spec/blob/main/layer.md) — blobs, layer ordering, and whiteouts.
 - [Git log](https://git-scm.com/docs/git-log) and [Git fsck](https://git-scm.com/docs/git-fsck) — supplied repository history and object recovery.
 
+## Registry, execution, and NTFS detail
+
+- [Microsoft registry hives](https://learn.microsoft.com/en-us/windows/win32/sysinfo/registry-hives) and [Run/RunOnce](https://learn.microsoft.com/en-us/windows/win32/setupapi/run-and-runonce-registry-keys) — source files, roots, and logon behavior.
+- [RECmd/rla](https://github.com/EricZimmerman/RECmd), [DFIR batch definitions](https://github.com/EricZimmerman/RECmd/blob/master/BatchExamples/DFIRBatch.md), and [registry plugins](https://github.com/EricZimmerman/RegistryPlugins) — key selection, decoding, transaction replay.
+- [Awad93 UserAssist parser](https://github.com/Awad93/Userassist_parser) — program/focus and UEME_CTLSESSION structures.
+- [REGF format](https://github.com/libyal/libregf/blob/main/documentation/Windows%20NT%20Registry%20File%20%28REGF%29%20format.asciidoc) and [shell-item format](https://github.com/libyal/libfwsi/blob/main/documentation/Windows%20Shell%20Item%20format.asciidoc) — hive records and embedded structures.
+- [NTFS format](https://github.com/libyal/libfsntfs/blob/main/documentation/New%20Technologies%20File%20System%20%28NTFS%29.asciidoc), [change journals](https://learn.microsoft.com/en-us/windows/win32/fileio/change-journals), and [USN record fields](https://learn.microsoft.com/en-us/windows/win32/api/winioctl/ns-winioctl-usn_record_v2) — streams, file references, reason flags.
+- [EvtxECmd](https://github.com/EricZimmerman/evtx), [PECmd](https://github.com/EricZimmerman/PECmd), and [MFTECmd](https://github.com/EricZimmerman/MFTECmd) — upstream command syntax and export semantics.
+- [Defender event catalog](https://learn.microsoft.com/en-us/defender-endpoint/troubleshoot-microsoft-defender-antivirus), [4688 fields](https://learn.microsoft.com/en-us/windows/security/threat-protection/auditing/event-4688), and [Task Scheduler schema](https://learn.microsoft.com/en-us/windows/win32/taskschd/task-scheduler-schema) — provider-specific interpretation.
+
+## Browser, mail, and sign-in investigation
+
+- [ChromeCacheView](https://www.nirsoft.net/utils/chrome_cache_view.html) — cache folder selection and exports.
+- [Chromium visit schema](https://github.com/chromium/chromium/blob/main/components/history/core/browser/visit_database.cc) and [download schema](https://github.com/chromium/chromium/blob/main/components/history/core/browser/download_database.cc) — joins, durations, and download-chain records.
+- [libpff](https://github.com/libyal/libpff) and [pffexport](https://github.com/libyal/libpff/blob/main/pfftools/pffexport.c) — mailbox export formats and options.
+- [RFC 8601](https://www.rfc-editor.org/rfc/rfc8601) — trusted Authentication-Results interpretation.
+- [Microsoft Graph signIn schema](https://learn.microsoft.com/en-us/graph/api/resources/signin?view=graph-rest-1.0) — sign-in fields and export interpretation.
+- [MemNixFS CLI](https://github.com/MemNixFS/MemNixFS/blob/main/docs/cli-reference.md), [udmp-parser](https://github.com/0vercl0k/udmp-parser), and [Pyarmor static unpacker](https://github.com/Lil-House/Pyarmor-Static-Unpack-1shot) — additional tools from the [local inventory](LOCAL-TOOLBOX.md).
+
 ## Adding sources
 
 Prefer a direct link to the relevant manual or specification over a search result or generic homepage. Record tool versions when testing a recipe. Attribute a case study to its author, and retain any uncertainty or correction from the original investigation. A source's existence does not mean every claim or command has been independently reproduced.

@@ -13,6 +13,7 @@ Identify archive structure and encryption before choosing extraction, repair, or
 - [Extract a verifier and try targeted candidates](#extract-a-verifier-and-try-targeted-candidates)
 - [ZipCrypto known plaintext](#zipcrypto-known-plaintext)
 - [Encryption versus encoding](#encryption-versus-encoding)
+- [Existing nested extractor and CUPP](#existing-nested-extractor-and-cupp)
 - [References](#references)
 
 ## Tools and setup
@@ -97,6 +98,26 @@ The second line's keys are placeholders. Recovery of internal keys can unlock co
 ## Encryption versus encoding
 
 A Base64 wrapper is not password protection. A ZIP header does not imply all nested data is ZIP data. After every extraction, rerun `file` and inspect the next layer. For ransomware-wrapped archives, recover the outer crypto recipe first via [malware recovery](../Malware-Recovery/README.md).
+
+## Existing nested extractor and CUPP
+
+The local `nest-extract` alias points to `~/ctf-tools/nest_extract.py`. Its inspected CLI accepts `start`, `--keep`, `--max-steps`, and `--quiet`. It extracts beside the supplied archive and deletes each processed archive by default, so use a **new disposable working directory** and `--keep`:
+
+```bash
+mkdir -p work/nested
+cp evidence/nested.zip work/nested/
+python3 "$HOME/ctf-tools/nest_extract.py" work/nested/nested.zip --keep --max-steps 50
+```
+
+This follows a preferred branch when several nested archives appear; it is not exhaustive. Review all siblings. The depth limit is not a decompressed-size limit. Use Python 3.12+ for the TAR data filter used by this local script; its older fallback does not provide the same filtering. No public upstream/setup source was established for this personal script; use 7-Zip manually when it is unavailable.
+
+CUPP is also present in `~/ctf-tools/cupp`. [Upstream setup and options](https://github.com/Mebus/cupp) require Python 3; clone the repository if missing. Run in the case working directory:
+
+```bash
+python3 "$HOME/ctf-tools/cupp/cupp.py" -i
+```
+
+Use challenge-provided clues to build a small candidate list, then feed it to the appropriate John/Hashcat verifier workflow above. CUPP creates candidates; it does not validate a password or recover arbitrary encryption keys. For known-plaintext ZipCrypto, use the installed [bkcrack](https://github.com/kimci86/bkcrack) instead of treating it as a wordlist problem.
 
 ## References
 

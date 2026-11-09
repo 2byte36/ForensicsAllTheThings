@@ -8,6 +8,7 @@ Inspired by the topic-per-directory structure of [PayloadsAllTheThings](https://
 
 ## Start here
 
+- [Local toolbox](LOCAL-TOOLBOX.md) — tools and aliases already used by the maintainer, with direct recipes.
 - [Tool setup](SETUP.md) — install commands, platform notes, and upstream installation sources.
 - [Runnable scripts](SCRIPTS.md) — reusable helpers with explicit inputs and limitations.
 - [Quick reference](QUICKSTART.md) — choose a starting point from the file in front of you.
@@ -25,6 +26,10 @@ Inspired by the topic-per-directory structure of [PayloadsAllTheThings](https://
 | [Memory forensics](Memory-Forensics/README.md) | Windows/Linux RAM, process dumps, injected code, runtime keys |
 | [Network forensics](Network-Forensics/README.md) | PCAP/PCAPNG, HTTP, DNS, ICMP, TLS, MQTT, exfiltration |
 | [Windows artifacts](Windows-Artifacts/README.md) | EVTX, registry, Prefetch, MFT/USN, DPAPI, RDP caches |
+| [Windows Registry](Windows-Registry/README.md) | Offline hives, RunMRU, UserAssist, ShellBags, persistence, transaction logs |
+| [Windows event logs](Windows-Event-Logs/README.md) | EVTX, PowerShell, Sysmon, Defender, logons, log clearing |
+| [Windows execution](Windows-Execution/README.md) | Prefetch, Amcache, LNK, Jump Lists, tasks, services, ClickFix |
+| [NTFS forensics](NTFS-Forensics/README.md) | MFT, USN, ADS, Recycle Bin, deleted files, timestamp interpretation |
 | [Linux forensics](Linux-Forensics/README.md) | Auth logs, systemd/cron persistence, shell history, container layers |
 | [macOS forensics](macOS-Forensics/README.md) | Property lists, launch agents/daemons, keychains, unified logs |
 | [Browser and messaging](Browser-and-Messaging/README.md) | Chromium profiles, downloads, Signal, Outlook, encrypted stores |
@@ -44,7 +49,7 @@ Inspired by the topic-per-directory structure of [PayloadsAllTheThings](https://
 
 ## Use it during a CTF
 
-Open the topic matching your artifact, run its first-pass commands, then follow the evidence to the next topic. Code examples assume a Linux analysis environment unless marked PowerShell or debugger. Replace example paths, PIDs, offsets, and field names with values from your case. Create output folders before exporting.
+Open the topic matching your artifact, run its first-pass commands, then follow the evidence to the next topic. Prefer direct tool commands and GUI workflows; the repository helpers are optional conveniences. Code examples assume a Linux analysis environment unless marked PowerShell or debugger. Replace example paths, PIDs, offsets, and field names with values from your case. Create output folders before exporting.
 
 Search the checkout with ripgrep:
 
@@ -58,7 +63,7 @@ Copy [the case notes template](templates/case-notes.md) into your own case direc
 
 Coverage follows common forensic artifacts and questions, not a single event or author's solve history. The [reference library](REFERENCES.md) points to upstream manuals and format specifications. Topic pages cite those sources and link relevant case studies.
 
-The [writeup index](WRITEUPS.md) currently catalogs 25 posts from 2byte's blog as an initial example collection; it is not the boundary of the cheatsheet. Challenge outcomes remain source-reported, and original challenge artifacts were not rerun. Commands are starting points with stated prerequisites and version limitations.
+The [writeup index](WRITEUPS.md) collects case studies from 2byte's blog, including the November 2026 registry and host-forensics additions; it is not the boundary of the cheatsheet. Challenge outcomes remain source-reported, and original challenge artifacts were not rerun. Commands are starting points with stated prerequisites and version limitations.
 
 Use extracted scripts and binaries as evidence: inspect and decode them statically. Do not execute a recovered loader to see what it does. Old challenge addresses and malware URLs are not required to use this cheatsheet.
 

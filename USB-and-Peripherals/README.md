@@ -13,6 +13,7 @@ A PCAP can contain keyboard reports or display bytes rather than ordinary IP tra
 - [Linux input events](#linux-input-events)
 - [Custom display and image framing](#custom-display-and-image-framing)
 - [Preserve peripheral context](#preserve-peripheral-context)
+- [Existing USB keyboard parser](#existing-usb-keyboard-parser)
 - [References](#references)
 
 ## Tools and setup
@@ -26,17 +27,13 @@ Linux package commands below target Debian/Ubuntu-family systems, including a Li
 
 ## Script and command recipe
 
-Helper: [hid_boot_decode.py](../scripts/helpers/hid_boot_decode.py). See [the script catalog](../SCRIPTS.md) for runtime requirements and failure behavior.
-
-Run from the repository root. Set `CASE` to an existing case directory outside this repository; filenames are examples to replace with your evidence paths.
+Use the existing USB keyboard parser directly on a copy of the capture:
 
 ```bash
-CASE=/absolute/path/to/case
-mkdir -p "$CASE/work" "$CASE/carved" "$CASE/extracts"
-python3 scripts/helpers/hid_boot_decode.py "$CASE/reports.hex" > "$CASE/work/keyboard-events.jsonl"
+python3 "$HOME/ctf-tools/CTF-Usb_Keyboard_Parser/main.py" /absolute/path/to/case/usb.pcapng
 ```
 
-Input is one hexadecimal 8-byte boot-keyboard report per line, from a single device/endpoint and direction. Emits new keypress events with modifier masks, US-layout text, and explicit unknown usages. No report IDs/NKRO, host auto-repeat, or final document editing; rollover errors stop decoding.
+The interactive alias is `usb-keyboard-parser`; see [its setup and limits](#existing-usb-keyboard-parser). Check device IDs and report format against TShark. Optional existing [hid_boot_decode.py](../scripts/helpers/hid_boot_decode.py) accepts only hexadecimal 8-byte boot reports from a single device/endpoint; it is not needed for the upstream parser workflow.
 
 ## Identify the device and report format
 
@@ -76,6 +73,19 @@ Retain bus/device address, endpoint, transfer type, direction, timestamps, statu
 Map payloads through the captured descriptor and report ID before interpreting usages. Mouse movement may need signed relative deltas; touch/tablet reports can use absolute coordinates. A keyboard decoder is not appropriate merely because an interrupt endpoint exists.
 
 For raw screen reconstruction, test channel order, row stride, orientation, and partial updates independently. A plausible image dimensions guess should be validated against all records and the expected payload length.
+
+## Existing USB keyboard parser
+
+The current `usb-keyboard-parser` alias invokes [shark-asmx/CTF-Usb_Keyboard_Parser](https://github.com/shark-asmx/CTF-Usb_Keyboard_Parser). Setup: clone that repository into `~/ctf-tools/CTF-Usb_Keyboard_Parser`; its current `main.py` parses captures directly, while the older script uses TShark.
+
+```bash
+# Interactive shell with the existing alias:
+usb-keyboard-parser capture.pcapng
+# Equivalent invocation without requiring aliases:
+python3 "$HOME/ctf-tools/CTF-Usb_Keyboard_Parser/main.py" capture.pcapng
+```
+
+Run in a case working directory because the tool may create output there. Inspect results per device ID and cross-check the capture's report descriptors, keyboard layout, Shift/Caps Lock, releases, and rollover. Supports the documented USBPcap/Linux link types; a non-keyboard endpoint or proprietary report format needs separate interpretation. A decoded character sequence does not automatically reconstruct cursor movement or editing history.
 
 ## References
 

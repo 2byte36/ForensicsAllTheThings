@@ -2,7 +2,7 @@
 
 [Home](README.md) · [Toolbox](TOOLS.md) · [Case notes](templates/case-notes.md)
 
-Missing a command? Follow [tool setup](SETUP.md). For ready-to-run operations, use [the helper catalog](SCRIPTS.md) or the Script and command recipe section in each topic.
+Missing a command? Start with [your installed toolbox and aliases](LOCAL-TOOLBOX.md), or follow [tool setup](SETUP.md). For ready-to-run operations, use [the helper catalog](SCRIPTS.md) or the Script and command recipe section in each topic.
 
 ## First five minutes
 
@@ -29,7 +29,10 @@ An archive-listing error may simply mean this is not an archive. File extensions
 | Windows RAM | `vol -f memory.raw windows.info` | [Memory](Memory-Forensics/README.md) |
 | ELF / process core | `readelf -h -l core.dump` | [Memory](Memory-Forensics/README.md#process-core-dumps) |
 | PCAP / PCAPNG | `tshark -r capture.pcapng -q -z io,phs` | [Network](Network-Forensics/README.md) |
-| EVTX / registry / Prefetch | Parse the relevant artifact and correlate time | [Windows](Windows-Artifacts/README.md) |
+| Registry hive / LOG1 / LOG2 | Registry Explorer; identify hive, user, and replay state | [Registry](Windows-Registry/README.md) |
+| EVTX | EvtxECmd → Timeline Explorer → exact event XML | [Event logs](Windows-Event-Logs/README.md) |
+| Prefetch / Amcache / LNK | PECmd and artifact-specific parsers; correlate launch evidence | [Execution](Windows-Execution/README.md) |
+| MFT / USN / ADS / Recycle Bin | MFTECmd + record/sequence/stream identity | [NTFS](NTFS-Forensics/README.md) |
 | Linux host files / journals | Inspect auth logs, systemd units, and shell history | [Linux](Linux-Forensics/README.md) |
 | macOS host files / plists | Identify OS/user context and parse launch definitions | [macOS](macOS-Forensics/README.md) |
 | Database + WAL | Preserve the database and sidecars before opening | [SQLite](SQLite-and-WAL/README.md) |

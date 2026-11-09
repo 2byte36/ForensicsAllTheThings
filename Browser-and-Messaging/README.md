@@ -14,6 +14,8 @@ Identify the right profile and protection layers before querying history or atte
 - [Signal, Outlook, and chat data](#signal-outlook-and-chat-data)
 - [Firefox history and download context](#firefox-history-and-download-context)
 - [Correlate rather than equate](#correlate-rather-than-equate)
+- [Cache, downloads, and ClickFix](#cache-downloads-and-clickfix)
+- [Sessions, unsaved text, and local application stores](#sessions-unsaved-text-and-local-application-stores)
 - [References](#references)
 
 ## Tools and setup
@@ -107,6 +109,62 @@ Firefox visit timestamps here use Unix microseconds, unlike Chromium's 1601 epoc
 A history row indicates a recorded browser event, not necessarily deliberate user navigation. Redirects, background requests, sync, and prefetching can contribute records. Use visit type, referrer chains, downloaded target paths, file hashes, and execution artifacts to distinguish browsing, download completion, and execution.
 
 Cookie expiry is not the time a user last logged in. Cached content is not proof that the visible page displayed it. Keep raw URL encoding and query strings alongside normalized values.
+
+## Cache, downloads, and ClickFix
+
+ChromeCacheView is already in the local Windows toolbox. Download/unpack it from [NirSoft's setup and CLI page](https://www.nirsoft.net/utils/chrome_cache_view.html); no custom helper is needed. In the GUI, use **File → Select Cache Folder** and choose the acquired profile's cache, then search URL/content type and copy selected entries to the case output. For current Chromium layouts, inspect `Cache\Cache_Data`; preserve the entire cache directory.
+
+PowerShell:
+
+```powershell
+$CacheView = 'C:\Users\ACER\dfir_tools\chromecacheview\ChromeCacheView.exe'
+& $CacheView -folder 'C:\cases\browser\profile\Cache\Cache_Data' /scomma 'C:\cases\browser\reports\cache.csv'
+```
+
+Hash exported bodies and retain their URL/cache metadata. Server time, cache access time, browser visit time, and extraction time describe different events. Review recovered JavaScript as text; a cache entry does not prove code execution.
+
+For copied Chromium/Edge History databases, inspect schemas first, then query individual visits and download chains:
+
+```bash
+sqlite3 -readonly work/browser/History '.schema visits'
+sqlite3 -readonly work/browser/History '.schema downloads'
+sqlite3 -readonly work/browser/History '.schema downloads_url_chains'
+sqlite3 -readonly -header -csv work/browser/History "
+SELECT v.id, v.visit_time AS raw_time,
+       datetime(v.visit_time/1000000.0-11644473600,'unixepoch') AS utc,
+       v.visit_duration/1000000.0 AS recorded_duration_seconds,
+       v.from_visit, v.transition, u.url
+FROM visits v JOIN urls u ON u.id=v.url ORDER BY v.visit_time;" > work/visits.csv
+sqlite3 -readonly -header -csv work/browser/History "
+SELECT d.id, d.target_path, d.start_time, d.end_time, d.state,
+       d.received_bytes, d.total_bytes, c.chain_index, c.url
+FROM downloads d LEFT JOIN downloads_url_chains c ON c.id=d.id
+ORDER BY d.start_time, d.id, c.chain_index;" > work/downloads.csv
+```
+
+The recorded visit duration is not proof of continuous human attention. Zero/unset end times should not become historical dates. Interpret download states and byte counts using the browser version, then verify the target file/hash. Source schemas: [Chromium visits](https://github.com/chromium/chromium/blob/main/components/history/core/browser/visit_database.cc), [downloads](https://github.com/chromium/chromium/blob/main/components/history/core/browser/download_database.cc).
+
+In [GotFish](https://2byte36.github.io/blog/tryhards-ctf-2026), cached JavaScript and [RunMRU](../Windows-Registry/README.md#user-activity-and-execution) expose the ClickFix input chain. Compare exact strings, profile/SID, and times with process/PowerShell evidence before asserting execution.
+
+## Sessions, unsaved text, and local application stores
+
+| Store | Collect and inspect | Limit |
+| --- | --- | --- |
+| Chromium sessions | Profile `Sessions` and available older session files | Open/closed tab context is not equivalent to a new navigation |
+| Firefox sessions | `sessionstore-backups` and matching profile | Compressed/session-specific format; do not treat as plain JSON without decoding |
+| Sublime Text | `AppData\Roaming\Sublime Text\Local\Session.sublime_session` | Can retain buffers/unsaved text; exact keys/version vary |
+| Electron/Discord renderer memory | Correct process dump plus local profile/LevelDB | Strings can be stale, duplicated, or unrelated to the visible channel |
+| Delta Chat | Acquired account database, configuration, contacts and messages | Inspect schema and encryption before querying; do not assume a browser schema |
+
+For an acquired JSON Sublime session, inspect keys and strings directly:
+
+```bash
+jq 'keys' work/Session.sublime_session
+jq -r '.. | strings' work/Session.sublime_session > work/session-strings.txt
+rg -n -i 'note|key|invoice|password' work/session-strings.txt
+```
+
+Retain the original object path when a string matters; flattened output is only triage. GotFish demonstrates unsaved editor evidence; [RECURSION 2.0](https://2byte36.github.io/blog/recursion-2-final) contributes a Delta Chat/macOS example. See the [existing Discord parser recipe](../Memory-Forensics/README.md#user-minidumps-and-existing-discord-parser) for memory-specific limits.
 
 ## References
 

@@ -14,6 +14,7 @@ Use structure and signal clues to choose the channel, bitplane, or encoding wort
 - [Framing and error correction](#framing-and-error-correction)
 - [Choose the right stego tool](#choose-the-right-stego-tool)
 - [Text and metadata channels](#text-and-metadata-channels)
+- [AperiSolve and multiple image fragments](#aperisolve-and-multiple-image-fragments)
 - [References](#references)
 
 ## Tools and setup
@@ -134,6 +135,28 @@ PYCODE
 ```
 
 These indices are characters, not byte offsets. Zero-width characters, homoglyphs, or line-ending differences can encode data, but multilingual text also contains them legitimately. Preserve normalization and original bytes before testing an encoding hypothesis.
+
+## AperiSolve and multiple image fragments
+
+An AperiSolve checkout already exists at `~/ctf-tools/AperiSolve`. Follow [upstream self-host setup](https://github.com/Zeecka/AperiSolve) for Docker/Compose, then run locally:
+
+```bash
+cd "$HOME/ctf-tools/AperiSolve"
+docker compose up -d
+```
+
+Open the documented local interface (default `http://localhost:5000`) to compare bit layers and tool outputs. Choose local analysis when evidence should remain on the workstation. The interface aggregates tests; it does not establish that every reported signature is real. Reproduce a promising result with the relevant tool:
+
+```bash
+zsteg -a first.png > work/first-zsteg.txt
+zsteg -a second.png > work/second-zsteg.txt
+# Example selector only: replace with a meaningful result from this image.
+zsteg -E 'b1,rgb,lsb,xy' first.png > extracts/first-fragment.bin
+file extracts/first-fragment.bin
+xxd -l 96 extracts/first-fragment.bin
+```
+
+Compare multiple images as a set: carrier dimensions, channel/bit ordering, payload offsets, fragment order, and any XOR/compression layer. [RECURSION — stegoshit](https://2byte36.github.io/blog/recursion-2-final) illustrates a multi-image recovery; its offsets and selectors are case-specific, not defaults for other images.
 
 ## References
 

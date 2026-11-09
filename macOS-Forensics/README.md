@@ -12,6 +12,7 @@ Investigate macOS property lists, launchd persistence, shell history, keychains,
 - [Unified logs with Mandiant](#unified-logs-with-mandiant)
 - [Launch agents and daemons](#launch-agents-and-daemons)
 - [Correlate host activity](#correlate-host-activity)
+- [LaunchAgent and staged-command correlation](#launchagent-and-staged-command-correlation)
 - [References](#references)
 
 ## Tools and setup
@@ -164,6 +165,23 @@ The filename is illustrative. A launch definition establishes configuration, not
 - Record the acquisition scope and parser version; missing records may reflect collection or parsing limits.
 
 Use [browser and messaging](../Browser-and-Messaging/README.md) for profile data and [timestamps](../Timestamps-and-Timelines/README.md) for epoch/timezone conversion. Keep observed timestamps separate from challenge-service accepted answers.
+
+## LaunchAgent and staged-command correlation
+
+For each acquired LaunchAgent/LaunchDaemon, inspect the plist as data, then the target file and associated logs. On a macOS analysis host:
+
+```bash
+plutil -lint work/com.example.agent.plist
+plutil -p work/com.example.agent.plist
+shasum -a 256 work/agent-binary
+file work/agent-binary
+strings -a work/agent-binary > work/agent-strings.txt
+rg -n -i 'https?://|token|nonce|launch|package' work/agent-strings.txt
+```
+
+Map `Label`, `Program`/`ProgramArguments`, `RunAtLoad`, `KeepAlive`, environment, working directory, and output paths. A label resembling `com.apple.*` is not a signature or trust decision; verify the target, source location, user/system scope, and supporting execution evidence. A plist's presence alone does not prove it loaded. Source: [Apple launchd jobs](https://developer.apple.com/library/archive/documentation/MacOSX/Conceptual/BPSystemStartup/Chapters/CreatingLaunchdJobs.html).
+
+The [RECURSION macOS case](https://2byte36.github.io/blog/recursion-2-final) combines chat, application logs, LaunchAgent persistence, staged crypto, and package-service traffic. For similar evidence, preserve request headers, package/version identifiers, polling intervals, task/result ordering, and the precise key derivation. A legitimate package service hostname does not explain the content carried through it. Use [Mandiant Unified Logs](#unified-logs-with-mandiant), [network extraction](../Network-Forensics/README.md), and [crypto validation](../Malware-Recovery/README.md) to test each connection.
 
 ## References
 

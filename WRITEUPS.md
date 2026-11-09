@@ -2,7 +2,7 @@
 
 [Home](README.md) · [Quick reference](QUICKSTART.md)
 
-Source survey: **2026-11-05**, all five pages of [2byte's blog](https://2byte36.github.io/blog/). This index covers 25 posts: 24 contain forensic material; the reverse-only Techcomfest final is recorded for completeness. Mixed-category posts contribute their forensic sections only.
+Initial source survey: **2026-11-05**, all five pages of [2byte's blog](https://2byte36.github.io/blog/), recording 25 posts. Updated **2026-11-09** with TryHards, RECURSION 2.0 Final, and Schematics NPC Quals (28 collected entries). Earlier entries are retained even if the current blog listing changes. Mixed-category posts contribute their forensic sections only; the reverse-only Techcomfest final remains recorded for completeness.
 
 This is an initial collection of worked examples, not the coverage boundary of the project. General recipes are also sourced from the [reference library](REFERENCES.md); future examples can come from other authors and events.
 
@@ -12,6 +12,9 @@ These are technique mappings, not reproduced challenge solutions. Original posts
 
 | Writeup | Forensic challenges | Techniques and local guides |
 | --- | --- | --- |
+| [TryHards CTF 2026 — GotFish](https://2byte36.github.io/blog/tryhards-ctf-2026) | GotFish | ClickFix/cache and RunMRU, UserAssist, Defender/PowerShell logs, registry key material, deleted tools, Startup persistence, unsaved editor text. [Registry](Windows-Registry/README.md) · [Browser](Browser-and-Messaging/README.md) · [Event logs](Windows-Event-Logs/README.md) · [NTFS](NTFS-Forensics/README.md) |
+| [RECURSION 2.0 Final — Forensics](https://2byte36.github.io/blog/recursion-2-final) | Transkrip Bersejarah; development; They do, usually when you’ve finally moved on; stegoshit; nguping | Office paragraph-derived XOR, Linux memory/LUKS, macOS chat/logs/LaunchAgents, staged package-channel traffic, multiple image fragments. [Documents](Documents-and-Email/README.md) · [Linux](Linux-Forensics/README.md) · [macOS](macOS-Forensics/README.md) · [Memory](Memory-Forensics/README.md) · [Steganography](Steganography/README.md) |
+| [Schematics NPC 2026 Quals — Forensics](https://2byte36.github.io/blog/schematics-2026-quals) | Ambatuboot; Ratatouille; Day 1; ConnectBreach | Deleted Linux history/source, PST/PDF phishing, Entra session investigation, DLL sideloading, Run persistence, application/chat logs, memory/C2 correlation. [Email](Documents-and-Email/README.md) · [Cloud](Cloud-and-Containers/README.md) · [Execution](Windows-Execution/README.md) · [Memory](Memory-Forensics/README.md) |
 | [GEMASTIK 19 Quals — Forensics](https://2byte36.github.io/blog/gemastik-19-quals) | cinder; Ghost In The Core; Tombstone | WAL preservation, process-core crypto recovery, xattrs and environment-derived keys. [SQLite and WAL](SQLite-and-WAL/README.md) · [Memory Forensics](Memory-Forensics/README.md) · [Disk Forensics](Disk-Forensics/README.md) · [Malware Recovery](Malware-Recovery/README.md) |
 | [GEMASTIK Internal Selection — Forensics](https://2byte36.github.io/blog/gemastik-internal) | Anomalous Beacon | HTTP payload extraction, request headers, redirect-chain reconstruction. [Network Forensics](Network-Forensics/README.md) |
 | [JOINTS 2026 Quals — Forensics](https://2byte36.github.io/blog/joints-2026-quals) | Claudio Maximus; Disk Cleaner; revenant; key item get | Go metadata in a child-process dump, RC4, WAL states, stereo audio and framing. [Memory Forensics](Memory-Forensics/README.md) · [Malware Recovery](Malware-Recovery/README.md) · [SQLite and WAL](SQLite-and-WAL/README.md) · [Steganography](Steganography/README.md) |

@@ -68,8 +68,6 @@ def check(root):
             for required in ("## Summary", "## Tools and setup", "## Script and command recipe", "## References"):
                 if not any(line == required for _, line in lines):
                     errors.append(f"{relative}: missing {required}")
-            if not any('../scripts/helpers/' in line for _, line in lines):
-                errors.append(f"{relative}: missing helper script link")
             if not any('[Source](https://' in line for _, line in lines):
                 errors.append(f"{relative}: missing upstream tool setup source")
         for number, line in lines:

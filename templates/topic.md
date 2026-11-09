@@ -19,7 +19,7 @@ List required tools, platform-specific install commands, direct upstream install
 
 ## Script and command recipe
 
-Link a relevant helper from [the script catalog](../SCRIPTS.md), show a runnable invocation with clearly labeled input/output paths, and explain expected results, prerequisites, and failure modes. Reuse a focused helper where appropriate instead of adding duplicate code.
+Prefer direct commands or a GUI workflow from an established tool, with clearly labeled input/output paths, expected results, prerequisites, and failure modes. Consult [the local toolbox](../LOCAL-TOOLBOX.md). A relevant existing helper from [the script catalog](../SCRIPTS.md) can be linked as an optional alternative; do not create a wrapper just to satisfy a section.
 
 ## First pass
 

@@ -10,7 +10,7 @@
 4. Distinguish generic examples from challenge-specific offsets, keys, and guesses.
 5. Cite primary documentation for formats and tool behavior. Add relevant worked examples from any author; update the example index when adding a case study. A personal writeup is not required.
 6. Add the category to the root README and quick reference if needed.
-7. Include Tools and setup plus Script and command recipe sections, with upstream installation sources and verification commands.
+7. Include Tools and setup plus Script and command recipe sections, with upstream installation sources and verification commands. Prefer direct commands from established tools, especially those in the local toolbox; GUI workflows are welcome. A repository helper is optional, not a topic requirement.
 8. Run `python3 scripts/check_docs.py` and `python3 -m unittest discover -s tests -v`, then review the rendered Markdown.
 
 ## Scope and source policy
@@ -33,4 +33,4 @@ Use upstream manuals, implementation documentation, and format specifications fo
 
 Repository helpers should read evidence, require explicit parameters, refuse existing generated outputs, and explain partial-failure behavior. Add meaningful synthetic fixtures for parsing, boundary conditions, and failure paths; do not test with live malware or private evidence.
 
-This checkout is prepared for local review. The included GitHub workflow, if later pushed, checks documentation and helper tests; it has no publishing or deployment step.
+The included GitHub workflow checks documentation and existing helper tests; it has no publishing or deployment step.

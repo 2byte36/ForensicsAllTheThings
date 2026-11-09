@@ -12,6 +12,7 @@ Follow Linux account activity, persistence, application data, and filesystem his
 - [Persistence and hidden files](#persistence-and-hidden-files)
 - [Container layer recovery](#container-layer-recovery)
 - [General host investigation checklist](#general-host-investigation-checklist)
+- [Offline journals, SSH, and deleted history](#offline-journals-ssh-and-deleted-history)
 - [References](#references)
 
 ## Tools and setup
@@ -93,6 +94,24 @@ Read manifest/config data to identify layer order and build history. A deletion 
 A command in a service definition proves configuration, not that the service ran. A library listed in `ld.so.preload` may have been removed or replaced by acquisition time. Use logs, hashes, and file metadata to establish the observed state.
 
 For image layers and repository history, continue with [cloud and containers](../Cloud-and-Containers/README.md). For normalization across host logs, see [timestamps](../Timestamps-and-Timelines/README.md).
+
+## Offline journals, SSH, and deleted history
+
+Use the acquired journal directory, not the analyst machine's live journal. The existing systemd tools can inspect a working copy:
+
+```bash
+journalctl --directory=work/journal --verify
+journalctl --directory=work/journal --list-boots
+journalctl --directory=work/journal --utc --no-pager -o short-iso-precise > work/journal-utc.txt
+journalctl --directory=work/journal --utc --no-pager -o json > work/journal.jsonl
+rg -n -i 'sshd|sudo|session opened|authentication failure|cron' work/journal-utc.txt
+```
+
+`--verify` checks journal structure; authenticity verification needs the corresponding sealing material. Separate boot IDs and realtime versus monotonic timestamps. Correlate SSH source/account, authorized key files, sudo command/TTY, shell history, systemd/cron definitions, and resulting files. Unit names vary (`ssh.service` versus `sshd.service`), so inspect available records before filtering by unit. Source: [journalctl manual](https://www.freedesktop.org/software/systemd/man/latest/journalctl.html).
+
+A missing `.bash_history` is not proof no commands ran: history may be disabled, unflushed, redirected, or deleted. Look for other shells, root and service-account homes, editor backups, journal/audit records, memory, and filesystem recovery. Bash `#<epoch>` lines only timestamp commands if those records were actually saved; do not invent timestamps for plain lines.
+
+[RECURSION development](https://2byte36.github.io/blog/recursion-2-final) combines Linux memory and encrypted disk recovery; [Schematics Ambatuboot](https://2byte36.github.io/blog/schematics-2026-quals) motivates residual/deleted-content searches. Follow [MemNixFS/Volatility](../Memory-Forensics/README.md#memprocfs-and-linux-memnixfs) and [read-only disk recovery](../Disk-Forensics/README.md) when disk logs are incomplete. A recovered LUKS volume key is not the user's passphrase; keep key length, cipher/mode, and volume association explicit.
 
 ## References
 

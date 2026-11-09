@@ -4,7 +4,7 @@
 
 Run helpers from the repository root using `python3 scripts/helpers/NAME.py --help`. Python 3.9+ is required. Activate the venv from SETUP.md when using installed Python tools. Keep inputs and generated case reports outside this repository.
 
-Helpers are small, explicit operations rather than automatic challenge solvers. File-producing helpers use exclusive creation and refuse an existing output. Directory-producing helpers require a new directory. Shell redirection (`> report`) follows normal shell overwrite rules; choose a fresh report name. A nonzero exit can leave partial reports or output; inspect stderr and discard/review that output before continuing.
+Prefer [direct commands from the local toolbox](LOCAL-TOOLBOX.md) when available. These existing helpers are optional; new cheatsheets do not require custom scripts. Helpers are small, explicit operations rather than automatic challenge solvers. File-producing helpers use exclusive creation and refuse an existing output. Directory-producing helpers require a new directory. Shell redirection (`> report`) follows normal shell overwrite rules; choose a fresh report name. A nonzero exit can leave partial reports or output; inspect stderr and discard/review that output before continuing.
 
 ## Scripts and inputs
 
@@ -34,6 +34,10 @@ Helpers are small, explicit operations rather than automatic challenge solvers. 
 - [Memory Forensics](Memory-Forensics/README.md#script-and-command-recipe)
 - [Network Forensics](Network-Forensics/README.md#script-and-command-recipe)
 - [Windows Artifacts](Windows-Artifacts/README.md#script-and-command-recipe)
+- [Windows Registry — Registry Explorer, RECmd, UserAssist](Windows-Registry/README.md#script-and-command-recipe)
+- [Windows event logs — EvtxECmd](Windows-Event-Logs/README.md#script-and-command-recipe)
+- [Windows execution — PECmd](Windows-Execution/README.md#script-and-command-recipe)
+- [NTFS — MFTECmd](NTFS-Forensics/README.md#script-and-command-recipe)
 - [Linux forensics](Linux-Forensics/README.md#script-and-command-recipe)
 - [macOS forensics](macOS-Forensics/README.md#script-and-command-recipe)
 - [Browser and Messaging](Browser-and-Messaging/README.md#script-and-command-recipe)

@@ -2,7 +2,7 @@
 
 [Home](README.md) · [Toolbox](TOOLS.md) · [Runnable scripts](SCRIPTS.md)
 
-Each topic has a Tools and setup table and a runnable recipe. This page covers the common environment. These are installation instructions, not an installer that has been run on your machine. Package availability and tool runtimes vary by OS release; follow the linked upstream instructions when they differ.
+Each topic has a Tools and setup table and a runnable recipe. Start with [the installed toolbox](LOCAL-TOOLBOX.md) to reuse existing tools and aliases; direct upstream commands are preferred over new custom helpers. This page covers the common environment. These are installation instructions, not an installer that has been run on your machine. Package availability and tool runtimes vary by OS release; follow the linked upstream instructions when they differ.
 
 ## Linux and WSL baseline
 
@@ -37,7 +37,7 @@ Only the image-bitplane helper requires Pillow. All other repository Python help
 - Volatility's entry point may be `vol`, `vol.py`, or a source checkout invoked with Python. The memory helper accepts `--vol /path/to/executable` for a single executable path.
 - TShark is used for offline files; packet-capture privileges are not needed for these recipes.
 - zsteg uses Ruby gems. After `gem install --user-install zsteg`, locate the user gem bin directory with `ruby -e 'puts Gem.user_dir'` and add its `bin` subdirectory to PATH.
-- WinDbg, Zimmerman utilities, and the EVTX PowerShell helper run on Windows. Check the required .NET runtime for the downloaded tool build; do not assume Linux PowerShell can read EVTX through Get-WinEvent.
+- WinDbg, Registry Explorer, Timeline Explorer, and Get-WinEvent recipes here use Windows. Some current Zimmerman CLI builds also support `dotnet TOOL.dll` on Linux/macOS; consult that release's runtime requirements. Linux PowerShell does not provide Windows Get-WinEvent EVTX support.
 - For release ZIPs, unpack into a dedicated tools directory, install documented prerequisites, and add the executable directory to PATH. Prefer versioned releases; record the actual version used in your case notes.
 
 ## Upstream installation catalog
@@ -66,6 +66,19 @@ The sources below are project-maintained installation/download pages or reposito
 | Zeek | Use official packages for your distribution or the documented build | [Installation/source](https://docs.zeek.org/en/current/install.html) | `zeek --version` |
 | jq | `sudo apt install jq` | [Installation/source](https://jqlang.org/download/) | `jq --version` |
 | Zimmerman tools | Windows: download Get-ZimmermanTools, inspect it, then run with `-Dest` as documented; install the matching .NET runtime | [Installation/source](https://ericzimmerman.github.io/) | Run the selected executable with `-h` |
+| RECmd / rla | Download release ZIPs, keep Plugins/BatchExamples with RECmd, install matching .NET; see [registry recipe](Windows-Registry/README.md) | [Installation/source](https://github.com/EricZimmerman/RECmd) | `RECmd.exe -h`; `rla.exe -h` |
+| UserAssist parser | Clone Awad93/Userassist_parser; in a venv run `python -m pip install python-registry` | [Installation/source](https://github.com/Awad93/Userassist_parser) | `python userassist_parser.py -h` |
+| AmcacheParser / LECmd / JLECmd / RBCmd | Optional Zimmerman releases; keep each tool's runtime dependencies | [Installation/source](https://ericzimmerman.github.io/) | Run the selected executable with `-h` |
+| ChromeCacheView | Windows ZIP from NirSoft, unpack and choose the acquired cache folder | [Installation/source](https://www.nirsoft.net/utils/chrome_cache_view.html) | Open File → Select Cache Folder |
+| MemNixFS | Download/build for the analysis host; WinFsp (Windows) or FUSE (Linux) for mounts; `cat`/`export` work without a mount | [Build/source](https://github.com/MemNixFS/MemNixFS/blob/main/docs/building.md) | `memnixfs --help` |
+| udmp-parser | Download a platform release or follow the CMake build | [Installation/source](https://github.com/0vercl0k/udmp-parser) | `parser.exe -h` |
+| CTF USB Keyboard Parser | `git clone https://github.com/shark-asmx/CTF-Usb_Keyboard_Parser.git`; Python 3 | [Installation/source](https://github.com/shark-asmx/CTF-Usb_Keyboard_Parser) | Run `python3 main.py` for usage |
+| libpff / pff-tools | `sudo apt install pff-tools` where available; otherwise upstream build | [Installation/source](https://github.com/libyal/libpff/wiki/Building) | `pffinfo -h`; `pffexport -h` |
+| pycdc / pycdas | Clone zrax/pycdc; `cmake -S . -B build` then `cmake --build build`; add build directory to PATH | [Installation/source](https://github.com/zrax/pycdc) | `pycdc --help`; `pycdas --help` |
+| PyLingual | Install uv; clone syssec-utd/pylingual; `uv tool install ./pylingual` | [Installation/source](https://github.com/syssec-utd/pylingual) | `pylingual --help` |
+| Pyarmor Static Unpack 1shot | Download platform release; keep shot.py and executable together | [Installation/source](https://github.com/Lil-House/Pyarmor-Static-Unpack-1shot) | `python oneshot/shot.py --help` |
+| CUPP | Clone Mebus/cupp; Python 3 | [Installation/source](https://github.com/Mebus/cupp) | `python3 cupp.py -h` |
+| AperiSolve | Clone Zeecka/AperiSolve; install Docker/Compose; `docker compose up -d` in checkout | [Installation/source](https://github.com/Zeecka/AperiSolve) | `docker compose ps` |
 | pypykatz | In the Python venv: `python -m pip install pypykatz` | [Installation/source](https://github.com/skelsec/pypykatz#installation) | `pypykatz --help` |
 | bmc-tools | Clone the upstream source and use its Python CLI | [Installation/source](https://github.com/ANSSI-FR/bmc-tools) | `python3 bmc-tools.py -h` |
 | SQLite CLI | `sudo apt install sqlite3` | [Installation/source](https://www.sqlite.org/download.html) | `sqlite3 --version` |

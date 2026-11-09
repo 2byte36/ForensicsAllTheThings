@@ -13,6 +13,7 @@ Investigate supplied audit exports, image archives, and repository history witho
 - [Recover older layer content](#recover-older-layer-content)
 - [Git and build history](#git-and-build-history)
 - [Questions to answer](#questions-to-answer)
+- [Entra sign-ins and session replay triage](#entra-sign-ins-and-session-replay-triage)
 - [References](#references)
 
 ## Tools and setup
@@ -96,6 +97,23 @@ Correlate CI workflow revision, run ID, job/step, artifacts, and logs. A workflo
 ## Questions to answer
 
 Who or which session acted, against which resource, from where, using which API or process, and with what outcome? Link audit events to image digest, deployment revision, repository commit, and artifact hashes where available. Preserve ingestion time separately from event time.
+
+## Entra sign-ins and session replay triage
+
+For a **Microsoft Graph signIns response** saved as JSON with a `value` array, query with the existing jq tool. Portal CSV, Azure Monitor exports, and beta endpoints can use different names; inspect `jq 'keys'` first.
+
+```bash
+jq -r '.value[] | [.createdDateTime, .id, .userPrincipalName,
+  .appDisplayName, .ipAddress, .clientAppUsed,
+  (.deviceDetail.deviceId // ""), (.deviceDetail.browser // ""),
+  (.status.errorCode | tostring), (.status.failureReason // ""),
+  .conditionalAccessStatus, .correlationId] | @tsv' \
+  signins.json > work/signins.tsv
+```
+
+Collect all supplied pages (`@odata.nextLink` indicates pagination), preserve original rows, and separate interactive/noninteractive activity when those fields are available. Compare user, application/resource, device identity/browser, IP, authentication details, and follow-on resource actions. A different IP or “MFA satisfied” result alone cannot prove cookie replay: VPNs, token reuse, brokers, and legitimate session behavior can produce similar observations.
+
+Use [Graph's signIn schema](https://learn.microsoft.com/en-us/graph/api/resources/signin?view=graph-rest-1.0) and the actual export's field definitions. Correlate [phishing delivery](../Documents-and-Email/README.md#pst-phishing-and-authentication-headers), browser visits, and mailbox/audit operations. The [Schematics Ratatouille case](https://2byte36.github.io/blog/schematics-2026-quals) motivates this workflow; avoid inferring a compromise mechanism solely from a successful authentication record.
 
 ## References
 

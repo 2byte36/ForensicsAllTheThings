@@ -30,17 +30,17 @@ Linux package commands below target Debian/Ubuntu-family systems, including a Li
 
 ## Script and command recipe
 
-Helper: [evtx_export.ps1](../scripts/helpers/evtx_export.ps1). See [the script catalog](../SCRIPTS.md) for runtime requirements and failure behavior.
-
-Run from the repository root in **Windows PowerShell**, after choosing an existing case directory:
+Use the installed EvtxECmd directly in **Windows PowerShell**:
 
 ```powershell
-$Case = "C:\Cases\example"
-New-Item -ItemType Directory -Force -Path "$Case\work" | Out-Null
-.\scripts\helpers\evtx_export.ps1 -InputPath "$Case\evidence\Security.evtx" -OutputPath "$Case\work\events.jsonl"
+$Case = 'C:\cases\windows'
+New-Item -ItemType Directory -Force "$Case\reports" | Out-Null
+& 'C:\Users\ACER\dfir_tools\EvtxeCmd\EvtxECmd.exe' -f "$Case\Security.evtx" --maps 'C:\Users\ACER\dfir_tools\EvtxeCmd\Maps' --csv "$Case\reports"
 ```
 
-Windows PowerShell: exports provider, event ID, record ID, original SystemTime, and raw XML as JSONL. Output must not exist. Keep the XML for provider fields that cannot render; failed processing can leave a partial report.
+Open the CSV in Timeline Explorer. See the detailed [event-log workflow](../Windows-Event-Logs/README.md), [registry guide](../Windows-Registry/README.md), [execution guide](../Windows-Execution/README.md), and [NTFS guide](../NTFS-Forensics/README.md) for focused commands and interpretation.
+
+Optional existing script: [evtx_export.ps1](../scripts/helpers/evtx_export.ps1) exports raw XML/metadata as JSONL using Windows Get-WinEvent; see [the catalog](../SCRIPTS.md) for its output behavior.
 
 ## Artifact map
 
@@ -103,6 +103,18 @@ This does not work on arbitrary process dumps and depends on captured pages and 
 ## RDP cache and execution chains
 
 Use `bmc-tools` to reconstruct bitmap tiles from RDP cache files, then inspect the collage and individual tiles. **Forgotten Fragments** recovered visible text this way.
+
+The existing alias points to the [ANSSI upstream parser](https://github.com/ANSSI-FR/bmc-tools). Collect the user's `AppData/Local/Microsoft/Terminal Server Client/Cache` directory. In WSL:
+
+```bash
+mkdir -p work/rdp-tiles
+python3 "$HOME/ctf-tools/bmc-tools/bmc-tools.py" -s extracts/rdp-cache -d work/rdp-tiles -b
+# Interactive alias equivalent:
+bmc-tools -s extracts/rdp-cache -d work/rdp-tiles -b
+```
+
+Choose one invocation. The collage groups recovered tiles; it does not guarantee their original screen positions or chronological order. Preserve source cache names and inspect individual tiles when interpreting text.
+
 
 In **The Apex Affair**, Outlook IndexedDB, Sysmon, Defender, registry, and memory supplied different parts of the chain. **Alice in DFIRland** instead exposed a challenge setup script through PowerShell logs: label that as an unintended shortcut, not a complete intrusion reconstruction.
 

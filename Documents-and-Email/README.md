@@ -13,6 +13,8 @@ Look beyond the rendered page: attachments, objects, revisions, and formatting c
 - [Email attachments](#email-attachments)
 - [Password-protected documents](#password-protected-documents)
 - [Embedded content and external relationships](#embedded-content-and-external-relationships)
+- [PST, phishing, and authentication headers](#pst-phishing-and-authentication-headers)
+- [Office relationships and paragraph-derived keys](#office-relationships-and-paragraph-derived-keys)
 - [References](#references)
 
 ## Tools and setup
@@ -108,6 +110,49 @@ For OOXML, list every member instead of restricting the search to `word/document
 For PDFs, distinguish visible text, OCR output, embedded text, and rendered pixels. A scanned page may require OCR; a successful text extraction may still omit important visual content. Validate recoveries with both structure and rendering when feasible.
 
 For password recovery, see [archives and passwords](../Archives-and-Passwords/README.md). For timestamps, use [timestamp conversion](../Timestamps-and-Timelines/README.md) rather than assuming all metadata is UTC.
+
+## PST, phishing, and authentication headers
+
+For Outlook PST/OST, install `pff-tools` on Debian/Ubuntu where packaged, or follow [libpff's build instructions](https://github.com/libyal/libpff/wiki/Building). Verify `pffinfo -h` and `pffexport -h`. Export to a new basename; pffexport adds suffixes such as `.export`:
+
+```bash
+mkdir -p work extracts
+pffinfo mailbox.pst > work/pst-info.txt
+pffexport -t extracts/mailbox mailbox.pst
+rg -n -i 'message-id|reply-to|authentication-results|https?://' extracts/mailbox.export
+```
+
+Retain folder/item IDs, original headers, body variants, and attachment hashes. PST export does not guarantee every item becomes an RFC 5322 `.eml`; inspect the tool's output layout before passing files to a MIME parser. Sources: [libpff](https://github.com/libyal/libpff), [pffexport options](https://github.com/libyal/libpff/blob/main/pfftools/pffexport.c).
+
+| Evidence | Question | Trap |
+| --- | --- | --- |
+| From / Reply-To / Return-Path | Who is displayed, where replies go, which envelope sender is recorded? | Different identities can be legitimate or deceptive |
+| Received chain | Which trusted mail hop received it, when, from where? | Read transport order bottom-to-top but establish the trusted boundary first; sender-added headers can lie |
+| Authentication-Results | What did the trusted receiver evaluate for SPF/DKIM/DMARC? | An attacker can insert its own header; a passing check does not make content safe |
+| Message-ID / thread IDs | Can the same message be correlated across mailbox/gateway/client? | IDs can be forged or duplicated |
+| HTML link / visible label | Does destination differ from displayed text? | HTML entities, redirectors, URL encoding, Unicode confusables |
+| Attachment name / type / hash | Does content match extension and delivery evidence? | Renaming does not change file type |
+
+The trust boundary for Authentication-Results is defined in [RFC 8601](https://www.rfc-editor.org/rfc/rfc8601). Analyze suspicious URLs as strings; live visits are not needed. Compare the full hostname, Unicode form and punycode, path, query, redirect context, and attachment destination. A lookalike domain is a clue, not proof of account compromise.
+
+[Example: Schematics — Ratatouille](https://2byte36.github.io/blog/schematics-2026-quals) connects a phishing mailbox/PDF with sign-in activity and later host execution. Follow the [cloud sign-in query](../Cloud-and-Containers/README.md#entra-sign-ins-and-session-replay-triage) to test that sequence against recorded evidence.
+
+## Office relationships and paragraph-derived keys
+
+Use the upstream tools directly on a copy:
+
+```bash
+7z l sample.docm
+oleid sample.docm
+olevba sample.docm > work/vba.txt
+7z x sample.docm -oextracts/docm
+rg -n 'TargetMode="External"|https?://' extracts/docm --glob '*.rels'
+rg -n -i 'xor|chr|asc|base64|powershell|paragraph' work/vba.txt
+```
+
+`oleid` and `olevba` are supplied by [oletools](https://github.com/decalage2/oletools); install with `python -m pip install oletools` in the analysis venv. Follow data flow from document text/metadata into the decoding routine. A paragraph can contain several `w:t` runs; preserve ordering and join runs within a paragraph before applying a rule about its first character. Do not apply that rule independently to every XML text node.
+
+[RECURSION — Transkrip Bersejarah](https://2byte36.github.io/blog/recursion-2-final) illustrates paragraph-derived repeating XOR. Generalize only the method: identify text-selection rule → key bytes/encoding → ciphertext representation → XOR order → output validation. Macro presence or an external relationship alone does not prove execution or network access.
 
 ## References
 

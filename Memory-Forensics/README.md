@@ -15,6 +15,8 @@ Use process relationships, mapped files, and runtime data to recover what disk a
 - [Linux memory](#linux-memory)
 - [Targeted process and registry inspection](#targeted-process-and-registry-inspection)
 - [Choose the acquisition path](#choose-the-acquisition-path)
+- [MemProcFS and Linux MemNixFS](#memprocfs-and-linux-memnixfs)
+- [User minidumps and existing Discord parser](#user-minidumps-and-existing-discord-parser)
 - [References](#references)
 
 ## Tools and setup
@@ -32,17 +34,19 @@ Linux package commands below target Debian/Ubuntu-family systems, including a Li
 
 ## Script and command recipe
 
-Helper: [memory_triage.py](../scripts/helpers/memory_triage.py). See [the script catalog](../SCRIPTS.md) for runtime requirements and failure behavior.
-
-Run from the repository root. Set `CASE` to an existing case directory outside this repository; filenames are examples to replace with your evidence paths.
+Use Volatility directly; the installed interactive `vol` alias already supplies the symbol cache:
 
 ```bash
 CASE=/absolute/path/to/case
-mkdir -p "$CASE/work" "$CASE/carved" "$CASE/extracts"
-python3 scripts/helpers/memory_triage.py "$CASE/memory.raw" "$CASE/work/volatility"
+mkdir -p "$CASE/work"
+vol -f "$CASE/memory.raw" windows.info > "$CASE/work/info.txt"
+vol -f "$CASE/memory.raw" windows.pslist > "$CASE/work/pslist.txt"
+vol -f "$CASE/memory.raw" windows.pstree > "$CASE/work/pstree.txt"
+vol -f "$CASE/memory.raw" windows.cmdline > "$CASE/work/cmdline.txt"
+vol -f "$CASE/memory.raw" windows.netscan > "$CASE/work/netscan.txt"
 ```
 
-Creates process, command-line, network, and OS reports plus separate stderr logs. Requires Volatility 3 on PATH and appropriate symbols. Any plugin failure returns nonzero; reports may be partial.
+Inspect stderr and command status before using each report. Missing symbols or unsupported acquisitions can cause partial results. [Local aliases](../LOCAL-TOOLBOX.md#relevant-bash-aliases) explain the equivalent invocation outside interactive Bash. Optional existing wrapper: [memory_triage.py](../scripts/helpers/memory_triage.py).
 
 ## Windows first pass
 
@@ -135,6 +139,64 @@ For injection triage, check installed `malfind` plugins: newer releases may expo
 | VM memory plus metadata | Keep companion files and virtual-machine configuration |
 
 If process plugins fail, verify acquisition format and symbols before assuming corruption. Strings and [YARA](../Search-and-YARA/README.md) can still identify leads, but cannot replace address-space reconstruction.
+
+## MemProcFS and Linux MemNixFS
+
+The [local toolbox](../LOCAL-TOOLBOX.md) contains both Windows MemProcFS binaries and a MemNixFS source checkout. Use [MemProcFS setup](https://github.com/ufrisk/MemProcFS/wiki) for the release's filesystem driver/runtime prerequisites and [MemNixFS build instructions](https://github.com/MemNixFS/MemNixFS/blob/main/docs/building.md) for its Windows/Linux requirements.
+
+PowerShell, Windows memory with MemProcFS (choose a free mount letter):
+
+```powershell
+& 'C:\Users\ACER\dfir_tools\MemProcFS_files_and_binaries-win_x64-latest\MemProcFS.exe' -device 'C:\cases\memory\memory.raw' -mount M -forensic 1
+```
+
+Keep the process running while browsing the mount. Inspect the generated process/module/network/forensic views, copy selected results to the case directory, and record the source process/address. [MemProcFS command-line reference](https://github.com/ufrisk/MemProcFS/wiki/_CommandLine) describes forensic modes; the older local release may differ.
+
+For Linux memory after installing/building MemNixFS and adding it to PATH:
+
+```bash
+memnixfs --dump memory.lime list
+memnixfs --dump memory.lime cat /sys/findevil/triage.txt
+memnixfs --dump memory.lime export work/memnixfs
+```
+
+This avoids requiring a mount for first-pass analysis. Inspect available exported paths rather than assuming every kernel feature was recovered. Symbol/BTF compatibility and memory coverage affect results; cached files are not a complete disk image. Source: [MemNixFS CLI](https://github.com/MemNixFS/MemNixFS/blob/main/docs/cli-reference.md).
+
+The existing Bash `vol` alias supplies the symbol cache. In an interactive shell:
+
+```bash
+vol -f memory.raw windows.info
+vol -f memory.raw windows.pslist
+vol -f memory.raw windows.pstree
+vol -f memory.raw windows.cmdline
+vol -f memory.raw windows.netscan
+```
+
+Save outputs separately and pivot from process ancestry to the suspicious process, rather than dumping everything without context.
+
+## User minidumps and existing Discord parser
+
+The local `parser.exe` is **udmp-parser**, not a physical-memory Volatility plugin. Download a compatible [upstream release/build](https://github.com/0vercl0k/udmp-parser), or use the installed path listed in the toolbox. With its directory on PATH, PowerShell:
+
+```powershell
+parser.exe -mods 'C:\cases\memory\process.dmp'
+parser.exe -mem 'C:\cases\memory\process.dmp'
+parser.exe -t 'C:\cases\memory\process.dmp'
+# Example virtual address: substitute an address present in this dump's map.
+parser.exe -dump 0x7ff00000 'C:\cases\memory\process.dmp'
+```
+
+A virtual address is not a file offset. Missing pages can reflect the minidump's collection flags, not deleted data. Use the module base and memory mapping when following pointers or module-relative offsets.
+
+The existing local `parse_discord.py` accepts a renderer dump and optional JSON output. Its public upstream is unknown; it is not copied into this repository. WSL, Python 3.10+ for its type syntax:
+
+```bash
+python3 /mnt/c/Users/ACER/dfir_tools/parse_discord.py --help
+python3 /mnt/c/Users/ACER/dfir_tools/parse_discord.py \
+  /absolute/path/to/case/renderer.dmp -o /absolute/path/to/case/work/discord.json
+```
+
+Review its source and output schema. A string recovered from renderer memory can be cached/stale or lack a complete message object; correlate message/channel/user IDs and source locations before claiming authorship or chronology.
 
 ## References
 

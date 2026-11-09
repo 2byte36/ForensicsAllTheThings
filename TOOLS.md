@@ -4,7 +4,7 @@
 
 For install commands and platform-specific sources, see [SETUP.md](SETUP.md). Each topic includes its own Tools and setup table, verification commands, and a runnable recipe linked to [the helper catalog](SCRIPTS.md).
 
-Install only the tools needed for the artifact. Follow upstream instructions and record your version in case notes; plugins, CLI flags, and format support change. The cheatsheet assumes output directories already exist.
+The [local toolbox](LOCAL-TOOLBOX.md) maps installed folders and selected aliases to direct commands. Install only the tools needed for the artifact. Follow upstream instructions and record your version in case notes; plugins, CLI flags, and format support change. The cheatsheet assumes output directories already exist.
 
 ## Everyday command line
 
@@ -23,6 +23,14 @@ Install only the tools needed for the artifact. Follow upstream instructions and
 | --- | --- |
 | Disk | [Sleuth Kit](https://www.sleuthkit.org/sleuthkit/), [Autopsy](https://www.autopsy.com/), [libewf](https://github.com/libyal/libewf), [cryptsetup](https://gitlab.com/cryptsetup/cryptsetup) |
 | Memory | [Volatility 3](https://github.com/volatilityfoundation/volatility3), [MemProcFS](https://github.com/ufrisk/MemProcFS), [bulk_extractor](https://github.com/simsong/bulk_extractor) |
+| Registry | [Registry Explorer](https://ericzimmerman.github.io/), [RECmd/rla](https://github.com/EricZimmerman/RECmd), [UserAssist parser](https://github.com/Awad93/Userassist_parser) |
+| Event logs and timelines | [EvtxECmd](https://github.com/EricZimmerman/evtx), [Timeline Explorer](https://ericzimmerman.github.io/) |
+| NTFS and execution | [MFTECmd](https://github.com/EricZimmerman/MFTECmd), [PECmd](https://github.com/EricZimmerman/PECmd), [AmcacheParser](https://github.com/EricZimmerman/AmcacheParser), [LECmd](https://github.com/EricZimmerman/LECmd), [JLECmd](https://github.com/EricZimmerman/JLECmd), [RBCmd](https://github.com/EricZimmerman/RBCmd) |
+| Browser cache and email stores | [ChromeCacheView](https://www.nirsoft.net/utils/chrome_cache_view.html), [libpff](https://github.com/libyal/libpff) |
+| Linux memory and minidumps | [MemNixFS](https://github.com/MemNixFS/MemNixFS), [udmp-parser](https://github.com/0vercl0k/udmp-parser) |
+| Python payloads | [pycdc](https://github.com/zrax/pycdc), [PyLingual](https://github.com/syssec-utd/pylingual), [Pyarmor Static Unpack 1shot](https://github.com/Lil-House/Pyarmor-Static-Unpack-1shot) |
+| USB keyboard captures | [CTF USB Keyboard Parser](https://github.com/shark-asmx/CTF-Usb_Keyboard_Parser) |
+| Image triage and password candidates | [AperiSolve](https://github.com/Zeecka/AperiSolve), [CUPP](https://github.com/Mebus/cupp) |
 | Windows artifacts | [Eric Zimmerman tools](https://ericzimmerman.github.io/), [pypykatz](https://github.com/skelsec/pypykatz), [bmc-tools](https://github.com/ANSSI-FR/bmc-tools) |
 | macOS Unified Logs | [Mandiant macos-UnifiedLogs](https://github.com/mandiant/macos-UnifiedLogs) — `unifiedlog_iterator`; [build and usage recipe](macOS-Forensics/README.md#unified-logs-with-mandiant) |
 | Network | [Wireshark/TShark](https://www.wireshark.org/docs/), [Zeek](https://docs.zeek.org/) |
